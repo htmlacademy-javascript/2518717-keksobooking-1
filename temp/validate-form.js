@@ -1,23 +1,34 @@
 // Находим элементы формы
-export const formAd = document.querySelector('.ad-form');
+const validatingForm = document.querySelector('.ad-form');
 const quantityRooms = document.querySelector('#room_number');
 const quantityGuests = document.querySelector('#capacity');
 const timeIn = document.querySelector('#timein');
 const timeOut = document.querySelector('#timeout');
+const avatarInput = document.querySelector('#avatar');
+const fotoOfApartment = document.querySelector('#images');
+const submitButton = document.querySelector('.ad-form__submit'); // Находим кнопку "Опубликовать"
+
+//Добавляем атрибут accept в загрузчики, чтобы только изображения п.3.7 ТЗ
+avatarInput.accept = 'image/jpeg, image/png, image/gif, image/webp';
+fotoOfApartment.accept = 'image/jpeg, image/png, image/gif, image/webp';
 
 //Определяем переменные для валидации комнат "Не для гостей"
 const notForGuests = 0;
 const qntyRoomsNotForGuests = 100;
 const singleRoom = 1;
 
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Размещаю...';
+};
 
 /**
  * Экземпляр для валидации с объктом config в качестве второго параметра
- * @param { * } formAd - элемент формы для валидации
+ * @param { * } validatingForm - элемент формы для валидации
  * @param { object } config - объект с настройками валидации для формы
  * @param { boolean } - не заполнено (по умолчанию true), определяет производить валидацию по мере ввода или по нажатию кнопки "Отправить"
  */
-const pristine = new Pristine(formAd, {
+const pristine = new Pristine(validatingForm, {
   // class of the parent element where the error/success class is added
   classTo: 'ad-form__element',
   errorClass: 'has-danger',
@@ -35,6 +46,17 @@ const pristine = new Pristine(formAd, {
  * @param { Event } 'submit' - отправка формы
  * @param { Function } handler - обработчик события
  */
+
+const validatingFormSubmit = (cb) => {
+  validatingForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      // blockSubmitButton();
+      cb(new FormData(validatingForm));
+    }
+  });
+};
 
 /**
  * Валидация поля "Количество мест" в зависимости от значения поля "Количество комнат"
@@ -73,8 +95,6 @@ const updateGuestConstraints = () => {
   pristine.validate(quantityGuests);
 };
 
-export const resetValidate = () => pristine.reset();
-
 /**
  * Функция для синхронизации значений полей Время заезда и Время выезда
  * @param { * } event - представляет собой любое событие, которое происходит в DOM
@@ -95,7 +115,4 @@ quantityRooms.addEventListener('change', updateGuestConstraints);
 timeIn.addEventListener('change', syncTimes);
 timeOut.addEventListener('change', syncTimes);
 
-export const isValid = () => pristine.validate();
-
-{/* <div class="pristine-error text-help">Добавь.те, пожалуйта, ещё описание. Минимум 30 символов.</div> */}
-{/* <div class="pristine-error text-help">Количество гостей в одной комнате не может быть больше одного</div> */}
+export { validatingFormSubmit, blockSubmitButton };
