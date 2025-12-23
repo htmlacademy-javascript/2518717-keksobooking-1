@@ -4,14 +4,19 @@ const roomTemplate = document.querySelector('#card').content.querySelector('.pop
 
 const qtyGuests = ['гостя', 'гостей'];
 const qtyRooms = ['комната', 'комнаты', 'комнат'];
+// Перечисление типов аппартаментов для перевода
 const TypeLocationNamed = {
-  palace: 'Дворец',
-  flat: 'Квартира',
-  house: 'Дом',
-  bungalow: 'Бунгало',
-  hotel: 'Отель',
+  PALACE: 'Дворец',
+  FLAT: 'Квартира',
+  HOUSE: 'Дом',
+  BUNGALOW: 'Бунгало',
+  HOTEL: 'Отель',
 };
-
+/**
+ *Создаёт попап
+ * @param {Object} point - объект с данными аппартамента
+ * @returns - возвращает блок с данными попап
+ */
 export const createCustomPopup = (point) => {
   const roomElement = roomTemplate.cloneNode(true);
   const { offer: { title, price, type, checkin, checkout, address, rooms, guests, features = [], description, photos }, author: { avatar } } = point;
@@ -19,7 +24,7 @@ export const createCustomPopup = (point) => {
   roomElement.querySelector('.popup__title').textContent = title;
   roomElement.querySelector('.popup__text--address').textContent = address;
   roomElement.querySelector('.popup__text--price').textContent = `${price} ₽/ночь`;
-  roomElement.querySelector('.popup__type').textContent = TypeLocationNamed[type];
+  roomElement.querySelector('.popup__type').textContent = TypeLocationNamed[type.toUpperCase()];
   roomElement.querySelector('.popup__text--capacity').textContent = `${rooms} ${getDeclension(qtyRooms, rooms)} для ${guests} ${getDeclension(qtyGuests, guests)}`;
   roomElement.querySelector('.popup__text--time').textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
   roomElement.querySelector('.popup__description').textContent = description;

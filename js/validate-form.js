@@ -20,7 +20,7 @@ const singleRoom = 1;
 const pristine = new Pristine(formAd, {
   // class of the parent element where the error/success class is added
   classTo: 'ad-form__element',
-  errorClass: 'has-danger',
+  errorClass: 'ad-form__element--invalid',
   successClass: 'has-success',
   // class of the parent element where error text element is appended
   errorTextParent: 'ad-form__element',
@@ -96,6 +96,3 @@ timeIn.addEventListener('change', syncTimes);
 timeOut.addEventListener('change', syncTimes);
 
 export const isValid = () => pristine.validate();
-
-{/* <div class="pristine-error text-help">Добавь.те, пожалуйта, ещё описание. Минимум 30 символов.</div> */}
-{/* <div class="pristine-error text-help">Количество гостей в одной комнате не может быть больше одного</div> */}

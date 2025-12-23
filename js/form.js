@@ -1,8 +1,10 @@
 import { sendAd } from './api.js';
-import { blockSubmitButton, resetForm } from './control-form.js';
-import { showMessage } from './maker-massage-success-error.js';
+import { blockSubmitButton, resetAll } from './control-form.js';
+import { showErrorMessage, showSuccessMessage } from './maker-massage-success-error.js';
 import { formAd, isValid } from './validate-form.js';
-
+/**
+ * Инициализирует форму после валидации и отправки данных
+ */
 export const initForm = () => {
   formAd.addEventListener('submit', async (evt) => {
     evt.preventDefault();
@@ -10,12 +12,10 @@ export const initForm = () => {
       blockSubmitButton();
       try {
         await sendAd(new FormData(formAd));
-        resetForm();
-        showMessage('Ваше объявление успешно размещено!');
-        // console.log('Всё ушло!!!');
+        resetAll();
+        showSuccessMessage();
       } catch {
-        showMessage('Ошибка размещения объявления');
-        // console.log('Не ушло...');
+        showErrorMessage();
       } finally {
         blockSubmitButton(false);
       }

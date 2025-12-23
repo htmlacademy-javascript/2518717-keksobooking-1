@@ -1,3 +1,9 @@
+/**
+ * Для склонения слова в зависимости от начального слова
+ * @param {Array} arr - массив с возможними вариантами склонения
+ * @param {String} element - элемент массива для склонения зависимого слова
+ * @returns
+ */
 export const getDeclension = (arr, element) => {
   const lastDigit = element % 10;
   if (arr.length < 3) {
@@ -13,4 +19,12 @@ export const getDeclension = (arr, element) => {
     return arr[1];
   }
   return arr[2];
+};
+// Шаблон функции для устранения "дребезга"
+export const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
 };

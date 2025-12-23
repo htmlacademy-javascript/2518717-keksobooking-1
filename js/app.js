@@ -1,13 +1,19 @@
 import { getData } from './api.js';
 import { disableFilter, disableForm } from './control-form.js';
+import { initFilter } from './filter-sort.js';
 import { initForm } from './form.js';
 import { initImageUploadAppartment, initImageUploadAvatar } from './load-images.js';
 import { showMessage } from './maker-massage-success-error.js';
-import { initMap, renderData } from './map.js';
+import { initMap } from './map.js';
 import { createUiSlider } from './no-ui-slider.js';
 
 disableForm();
 disableFilter();
+export let strangerAds;
+
+/**
+ * Функция последовательной загрузки. Сначала инициализация карты, после успешной загрузки снимает блокировки
+ */
 
 export const initApp = async () => {
   try {
@@ -19,8 +25,8 @@ export const initApp = async () => {
       createUiSlider();
       initImageUploadAvatar();
       initImageUploadAppartment();
-      const data = await getData();
-      renderData(data);
+      strangerAds = await getData();
+      initFilter(strangerAds);
     }
   } catch {
     showMessage('Не загружаются данные!');

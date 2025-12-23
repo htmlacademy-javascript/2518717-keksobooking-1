@@ -1,10 +1,18 @@
 import { DataUrl, Method } from './constants.js';
 import { disableForm } from './control-form.js';
 
+/**
+ * Функция для отправки получения данных
+ * @param {String} route - адрес сервера
+ * @param {String} method - метод отправки/получения данных
+ * @param {*} body - набор данных для отправки на сервер
+ * @returns
+ */
+
 const loader = (route, method = Method.GET, body = null) => fetch(route, {method, body})
   .then((response) => {
     if (!response.ok) {
-      throw new Error(); //Здесь надо поставить вызов сообщения "Не удалось подключиться"
+      throw new Error();
     }
     return response.json();
   })
