@@ -7,48 +7,25 @@ import { resetValidate, formAd } from './validate-form.js';
 
 const resetButton = document.querySelector('.ad-form__reset');
 const submitButton = document.querySelector('.ad-form__submit');
-const fieldSets = formAd.querySelectorAll('fieldset');
 export const mapFilter = document.querySelector('.map__filters');
-const filters = mapFilter.querySelectorAll('fieldset');
 
-/**
- * Деактивирует форму подачи объявления с параметром по умолчанию. С параметром false активирует форму
- */
-export const disableForm = (isDisabled = true) => {
+export const disableElement = (element, isDisabled = true) => {
   if (isDisabled) {
-    formAd.classList.add('ad-form--disabled');
+    element.classList.add('ad-form--disabled');
   } else {
-    formAd.classList.remove('ad-form--disabled');
+    element.classList.remove('ad-form--disabled');
   }
-  fieldSets.forEach((fieldSet) => {
-    fieldSet.disabled = isDisabled;
+  const fieldsets = element.querySelectorAll('fieldset');
+  fieldsets.forEach((fieldset) => {
+    fieldset.disabled = isDisabled;
   });
 };
 
-/**
- * Деактивирует форму фильтра с параметром по умолчанию. С параметром false активирует фильтр
- */
-export const disableFilter = (isDisabled = true) => {
-  if (isDisabled) {
-    mapFilter.classList.add('ad-form--disabled');
-  } else {
-    mapFilter.classList.remove('ad-form--disabled');
-  }
-  filters.forEach((filter) => {
-    filter.disabled = isDisabled;
-  });
-};
-/**
- *Функция блокировки кнопки на время отправки данных - заменяет название кнопки на время отправки
- * @param {Boolean} isDisabled - меняет состояние блокировки кнопки
- */
 export const blockSubmitButton = (isDisabled = true) => {
   submitButton.disabled = isDisabled;
   submitButton.textContent = isDisabled ? SubmitButtonText.SENDING : SubmitButtonText.IDLE;
 };
-/**
- * Функция сброса к исходным данным меток на карте, фильтра, балуна, формы объявления
- */
+
 export const resetAll = () => {
   mapFilter.reset();
   formAd.reset();
@@ -62,9 +39,7 @@ export const resetAll = () => {
   resetMap();
   resetSetFilter();
 };
-/**
- * Обработчик клика по кнопке Очистить
- */
+
 resetButton.addEventListener('click', (evt) => {
   evt.preventDefault();
   resetAll();

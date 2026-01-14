@@ -1,10 +1,10 @@
-//Находим элементы на странице
+import { validateField } from './validate-form.js';
+
 const sliderElement = document.querySelector('.ad-form__slider');
 const priceInput = document.querySelector('#price');
 const typeHousingSelect = document.querySelector('#type');
 
-// Объект с минимальными ценами для каждого типа жилья
-const MinPrices = {
+export const MinPrices = {
   PALACE: 10000,
   FLAT: 1000,
   HOUSE: 5000,
@@ -12,40 +12,54 @@ const MinPrices = {
   HOTEL: 3000
 };
 
-/**
-* Функция обновления настроек слайдера
-*/
+const MAX_PRICE = 100000;
+
+let currentStatePrice = 0;
+
 export const updateSetUiSlider = () => {
   const minPrice = MinPrices[typeHousingSelect.value.toUpperCase()];
-  // Обновляем настройки слайдера
-  sliderElement.noUiSlider.updateOptions({
-    range: {
-      min: minPrice,
-      max: 100000,
-    },
-    start: minPrice,
-  });
+  priceInput.placeholder = `от ${minPrice}`;
+  sliderElement.noUiSlider.updateOptions({ start: minPrice });
 };
 
-export const createUiSlider = () => {
-  //Создание слайдера в определённом элементе разметки
-  noUiSlider.create(sliderElement, {
-    range: {
-      min: 0,
-      max: 100000,
+noUiSlider.create(sliderElement, {
+  range: {
+    min: 0,
+    max: MAX_PRICE,
+  },
+  start: MinPrices[typeHousingSelect.value.toUpperCase()],
+  step: 1,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      return value.toFixed(0);
     },
-    start: MinPrices[typeHousingSelect.value.toUpperCase()],
-    step: 100,
-    connect: 'lower',
-  });
+    from: function (value) {
+      return parseFloat(value);
+    },
+  },
+});
 
-  // Получение значений положения слайдера
-  sliderElement.noUiSlider.on('update', () => {
+export const setSliderValue = (value) => {
+  sliderElement.noUiSlider.set(value);
+};
+
+priceInput.addEventListener('input', ({ target }) => {
+  const value = target.value.trim();
+  currentStatePrice = value.length ? Number(value) : -1;
+  setSliderValue(Number(target.value));
+});
+
+sliderElement.noUiSlider.on('update', () => {
+  if (currentStatePrice < 0) {
+    priceInput.value = '';
+  } else {
     priceInput.value = sliderElement.noUiSlider.get();
-  });
+  }
 
-  updateSetUiSlider();
+  validateField(priceInput);
+});
 
-  // Отслеживаем изменения поля выбора типа жилья
-  typeHousingSelect.addEventListener('change', updateSetUiSlider);
-};
+updateSetUiSlider();
+
+typeHousingSelect.addEventListener('change', updateSetUiSlider);
